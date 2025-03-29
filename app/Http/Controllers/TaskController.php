@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use Inertia\Inertia;
 
 class TaskController extends Controller
 {
@@ -13,7 +14,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('task/index', [
+            'tasks' => Task::latest()->get(),
+            'success' => session('success'),
+        ]);
     }
 
     /**
@@ -21,7 +25,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('task/create');
     }
 
     /**
@@ -29,7 +33,8 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        //
+        $task = Task::create($request->validated());
+        return redirect()->route('task.index')->with('success', 'Task created successfully');
     }
 
     /**
@@ -37,7 +42,9 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return Inertia::render('task/show', [
+            'task' => $task,
+        ]);
     }
 
     /**
@@ -45,7 +52,9 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return Inertia::render('task/edit', [
+            'task' => $task,
+        ]);
     }
 
     /**
@@ -53,7 +62,8 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        $task->update($request->validated());
+        return redirect()->route('task.index')->with('success', 'Task updated successfully');
     }
 
     /**
@@ -61,6 +71,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return redirect()->route('task.index')->with('success', 'Task deleted successfully');
     }
 }
