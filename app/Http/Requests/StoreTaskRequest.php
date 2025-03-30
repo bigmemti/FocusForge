@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Task;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTaskRequest extends FormRequest
@@ -11,7 +13,7 @@ class StoreTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('create', [Task::class, request()->user()]);
     }
 
     /**

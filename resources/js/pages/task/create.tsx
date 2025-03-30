@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem } from "@/types";
+import { BreadcrumbItem, User } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
 
-export default function Create() {
+export default function Create({ user }: { user: User }) {
     const { post, data, setData, errors, processing } = useForm({
         title: '',
     });
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        post('/dashboard/task');
+        post(route('user.task.store', { user }));
     }
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -21,11 +21,11 @@ export default function Create() {
         },
         {
             title: 'Tasks',
-            href: '/dashboard/task',
+            href: route('user.task.index', { user }),
         },
         {
             title: 'Create Task',
-            href: '/dashboard/task/create',
+            href: route('user.task.create', { user }),
         },
     ];
 

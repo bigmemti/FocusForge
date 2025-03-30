@@ -14,7 +14,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::resource('task', TaskController::class);
+    Route::resource('user.task', TaskController::class)->shallow();
 });
 
 require __DIR__.'/settings.php';
