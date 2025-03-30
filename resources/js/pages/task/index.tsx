@@ -4,15 +4,18 @@ import { Head, Link, router } from "@inertiajs/react";
 import { toast } from "sonner"
 import { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { List } from "lucide-react";
+import { List, Grid } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Grid } from "lucide-react";
 import AppLayout from "@/layouts/app-layout";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 export default function TaskIndex({ tasks, success }: { tasks: Task[], success: string }) {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>(() => {
         return localStorage.getItem('taskViewMode') as 'grid' | 'list' || 'grid';
     });
+    
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
     
     const changeStatus = (id: number) => {
         router.put(`/dashboard/task/${id}`, {
@@ -20,9 +23,21 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
         }, { preserveScroll: true });
     }
 
-    const deleteTask = (id: number) => {
-        if (confirm('Are you sure you want to delete this task?')) {
-            router.delete(`/dashboard/task/${id}`, { preserveScroll: true });
+    const openDeleteDialog = (id: number) => {
+        setTaskToDelete(id);
+        setIsDeleteDialogOpen(true);
+    };
+
+    const deleteTask = () => {
+        if (taskToDelete) {
+            router.delete(`/dashboard/task/${taskToDelete}`, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.success('Task deleted successfully');
+                }
+            });
+            setIsDeleteDialogOpen(false);
+            setTaskToDelete(null);
         }
     }
 
@@ -114,7 +129,7 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
                                             Edit
                                         </Link>
                                         <button
-                                            onClick={() => deleteTask(task.id)}
+                                            onClick={() => openDeleteDialog(task.id)}
                                             className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input dark:border-none dark:bg-destructive text-destructive-foreground dark:hover:bg-destructive/85 h-9 px-3 cursor-pointer"
                                         >
                                             Delete
@@ -164,7 +179,7 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
                                             Edit
                                         </Link>
                                         <button
-                                            onClick={() => deleteTask(task.id)}
+                                            onClick={() => openDeleteDialog(task.id)}
                                             className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input dark:border-none dark:bg-destructive text-destructive-foreground dark:hover:bg-destructive/85 h-9 px-3 cursor-pointer"
                                         >
                                             Delete
@@ -175,6 +190,21 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
                         </div>
                     )}
                 </div>
+
+                <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the task.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                            <AlertDialogAction className="cursor-pointer" onClick={deleteTask}>Delete</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </AppLayout>
     );
