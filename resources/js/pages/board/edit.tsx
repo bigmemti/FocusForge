@@ -24,6 +24,10 @@ export default function Edit({ board }: { board: Board }) {
             href: route('user.board.index', { user: board.user_id }),
         },
         {
+            title: board.name,
+            href: route('board.show', { board }),
+        },
+        {
             title: 'Edit Board',
             href: route('board.edit', { board }),
         },

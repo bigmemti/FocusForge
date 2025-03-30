@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\User;
+use App\Models\Board;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use Inertia\Inertia;
@@ -13,37 +13,37 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $user)
+    public function index(Board $board)
     {
-        Gate::authorize('viewAny', [Task::class, $user]);
+        Gate::authorize('viewAny', [Task::class, $board->user]);
 
         return Inertia::render('task/index', [
-            'tasks' => $user->tasks()->latest()->get(),
+            'tasks' => $board->tasks()->latest()->get(),
             'success' => session('success'),
-            'user' => $user,
+            'board' => $board,
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(User $user)
+    public function create(Board $board)
     {
-        Gate::authorize('create', [Task::class, $user]);
+        Gate::authorize('create', [Task::class, $board->user]);
 
         return Inertia::render('task/create', [
-            'user' => $user,
+            'board' => $board,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTaskRequest $request, User $user)
+    public function store(StoreTaskRequest $request, Board $board)
     {
-        $user->tasks()->create($request->validated());
+        $board->tasks()->create($request->validated());
         
-        return redirect()->route('user.task.index', $user)->with('success', 'Task created successfully');
+        return redirect()->route('board.task.index', $board)->with('success', 'Task created successfully');
     }
 
     /**
@@ -65,7 +65,7 @@ class TaskController extends Controller
     {
         $task->update($request->validated());
 
-        return redirect()->route('user.task.index', $task->user)->with('success', 'Task updated successfully');
+        return redirect()->route('board.task.index', $task->board)->with('success', 'Task updated successfully');
     }
 
     /**
@@ -75,9 +75,8 @@ class TaskController extends Controller
     {
         Gate::authorize('delete', $task);
 
-        $user = $task->user;
         $task->delete();
 
-        return redirect()->route('user.task.index', $user);
+        return redirect()->route('board.task.index', $task->board);
     }
 }

@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { BreadcrumbItem, Task, User } from "@/types";
+import { BreadcrumbItem, Task, Board } from "@/types";
 import { Head, Link, router } from "@inertiajs/react";
 import { toast } from "sonner"
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
-export default function TaskIndex({ tasks, success, user }: { tasks: Task[], success: string, user: User }) {
+export default function TaskIndex({ tasks, success, board }: { tasks: Task[], success: string, board: Board }) {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>(() => {
         return localStorage.getItem('taskViewMode') as 'grid' | 'list' || 'grid';
     });
@@ -59,8 +59,16 @@ export default function TaskIndex({ tasks, success, user }: { tasks: Task[], suc
             href: '/dashboard',
         },
         {
+            title: 'Boards',
+            href: route('user.board.index', { user: board.user_id }),
+        },
+        {
+            title: board.name,
+            href: route('board.show', { board }),
+        },
+        {
             title: 'Tasks',
-            href: route('user.task.index', { user }),
+            href: route('board.task.index', { board }),
         },
     ];
 
@@ -88,7 +96,7 @@ export default function TaskIndex({ tasks, success, user }: { tasks: Task[], suc
                             <List className="h-4 w-4" />
                         </Button>
                     </div>
-                    <Link href={route('user.task.create', { user })} className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                    <Link href={route('board.task.create', { board })} className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                         Create Task
                     </Link>
                 </div>

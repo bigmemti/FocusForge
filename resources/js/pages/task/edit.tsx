@@ -23,12 +23,24 @@ export default function Edit({ task }: { task: Task }) {
             href: '/dashboard',
         },
         {
+            title: 'Boards',
+            href: route('user.board.index', { user: task.board?.user_id }),
+        },
+        {
+            title: task.board?.name || 'Board',
+            href: route('board.show', { board: task.board }),
+        },
+        {
             title: 'Tasks',
-            href: route('user.task.index', { user: auth.user }),
+            href: route('board.task.index', { board: task.board }),
+        },
+        {
+            title: task.title,
+            href: route('board.task.index', { board: task.board }),
         },
         {
             title: 'Edit Task',
-            href: `/dashboard/task/${task.id}/edit`,
+            href: route('task.edit', { task }),
         },
     ];
 

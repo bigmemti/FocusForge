@@ -45,8 +45,10 @@ export interface Task {
     id: number;
     title: string;
     status: boolean;
+    board_id: number;
     created_at: string;
     updated_at: string;
+    board?: Board;
 }
 
 export interface Board {
@@ -55,4 +57,5 @@ export interface Board {
     user_id: number;
     created_at: string;
     updated_at: string;
+    tasks?: Task[];
 }

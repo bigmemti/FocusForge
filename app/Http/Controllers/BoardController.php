@@ -18,7 +18,7 @@ class BoardController extends Controller
         Gate::authorize('viewAny', [Board::class, $user]);
 
         return Inertia::render('board/index', [
-            'boards' => $user->boards,
+            'boards' => $user->boards()->latest()->get(),
             'success' => session('success'),
             'user' => $user
         ]);

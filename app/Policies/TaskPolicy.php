@@ -37,7 +37,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->id === $task->user_id;
+        return $user->id === $task->board->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->id === $task->user_id;
+        return $user->id === $task->board->user_id;
     }
 
     /**
@@ -53,7 +53,7 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task): bool
     {
-        return $user->id === $task->user_id;
+        return $user->id === $task->board->user_id;
     }
 
     /**
@@ -61,6 +61,6 @@ class TaskPolicy
      */
     public function forceDelete(User $user, Task $task): bool
     {
-        return $user->id === $task->user_id;
+        return $user->id === $task->board->user_id;
     }
 }
