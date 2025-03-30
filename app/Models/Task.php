@@ -25,8 +25,8 @@ class Task extends Model
         'deleted_at',
     ];
 
-    public function user(): BelongsTo
+    public function board(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Board::class);
     }
 }

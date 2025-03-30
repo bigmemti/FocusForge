@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Task;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Board;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,8 +21,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        Task::factory(10)->create([
+        $board = Board::factory()->create([
             'user_id' => $user->id,
+        ]);
+
+        Task::factory(10)->create([
+            'board_id' => $board->id,
         ]);
     }
 }
