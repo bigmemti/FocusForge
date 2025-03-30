@@ -1,13 +1,13 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Task } from "@/types";
+import { BreadcrumbItem, Task } from "@/types";
 import { Head, Link, router } from "@inertiajs/react";
-import { Toaster } from "@/components/ui/sonner"
 import { toast } from "sonner"
 import { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Grid } from "lucide-react";
+import AppLayout from "@/layouts/app-layout";
 
 export default function TaskIndex({ tasks, success }: { tasks: Task[], success: string }) {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>(() => {
@@ -15,14 +15,14 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
     });
     
     const changeStatus = (id: number) => {
-        router.put(`/task/${id}`, {
+        router.put(`/dashboard/task/${id}`, {
             status: !tasks.find((task) => task.id === id)?.status,
         }, { preserveScroll: true });
     }
 
     const deleteTask = (id: number) => {
         if (confirm('Are you sure you want to delete this task?')) {
-            router.delete(`/task/${id}`, { preserveScroll: true });
+            router.delete(`/dashboard/task/${id}`, { preserveScroll: true });
         }
     }
 
@@ -37,9 +37,20 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
         localStorage.setItem('taskViewMode', mode);
     };
 
+    
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Dashboard',
+            href: '/dashboard',
+        },
+        {
+            title: 'Tasks',
+            href: '/dashboard/task',
+        },
+    ];
+
     return (
-        <>
-            <Toaster position="top-center" />
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tasks" />
             <div className="space-y-6 container mx-auto mt-10 px-2">
                 <div className="flex items-center justify-between">
@@ -62,7 +73,7 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
                             <List className="h-4 w-4" />
                         </Button>
                     </div>
-                    <Link href="/task/create" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                    <Link href="/dashboard/task/create" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                         Create Task
                     </Link>
                 </div>
@@ -97,7 +108,7 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
                                     </div>
                                     <div className="flex justify-end space-x-2">
                                         <Link
-                                            href={`/task/${task.id}/edit`}
+                                            href={`/dashboard/task/${task.id}/edit`}
                                             className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
                                         >
                                             Edit
@@ -165,6 +176,6 @@ export default function TaskIndex({ tasks, success }: { tasks: Task[], success: 
                     )}
                 </div>
             </div>
-        </>
+        </AppLayout>
     );
 }
