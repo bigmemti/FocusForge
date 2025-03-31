@@ -1,16 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem, SharedData, Task } from "@/types";
+import { BreadcrumbItem, Task } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
-import { usePage } from "@inertiajs/react";
 
 export default function Edit({ task }: { task: Task }) {
     const { put, data, setData, errors, processing } = useForm({
         title: task.title,
     });
-
-    const { auth } = usePage<SharedData>().props;
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

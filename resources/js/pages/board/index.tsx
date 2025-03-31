@@ -1,8 +1,7 @@
-import { Board, BreadcrumbItem, Task, User } from "@/types";
+import { Board, BreadcrumbItem, User } from "@/types";
 import { Head, Link, router } from "@inertiajs/react";
 import { toast } from "sonner"
 import { useEffect, useState } from "react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import AppLayout from "@/layouts/app-layout";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
