@@ -5,6 +5,86 @@ import { useEffect, useState } from "react";
 import AppLayout from "@/layouts/app-layout";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+
+// Extracted BoardList component
+const BoardList = ({ boards, onDeleteClick, user }: { 
+    boards: Board[], 
+    onDeleteClick: (id: number) => void,
+    user: User 
+}) => {
+    return (
+        <div className="rounded-lg border bg-card">
+            <div className="hidden lg:flex items-center px-4 py-3 border-b font-medium">
+                <div className="w-16">ID</div>
+                <div className="flex-1">Title</div>
+                <div className="w-48 text-right">Actions</div>
+            </div>
+            {boards.map((board) => (
+                <div key={board.id} className="flex flex-col lg:flex-row items-center px-4 py-3 border-b last:border-b-0 lg:hover:bg-muted/50">
+                    <div className="hidden lg:block lg:w-16 text-sm text-muted-foreground">#{board.id}</div>
+                    <div className="hidden lg:block lg:w-full text-sm text-muted-foreground">{board.name}</div>
+                    <div className="flex-1 text-center lg:text-left mb-3 lg:mb-0">
+                        <div className="block lg:hidden mb-2">
+                            <span className="text-sm text-muted-foreground">ID: {board.id}</span>
+                        </div>
+                        <div className="inline-block me-3 lg:hidden mb-2">
+                            <span className="text-sm text-muted-foreground">Name: {board.name}</span>
+                        </div>
+                    </div>
+                    <div className="w-full lg:w-48 flex justify-center lg:justify-end space-x-2">
+                        <Link
+                            href={route('board.show', { board })}
+                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                        >
+                            <EyeIcon className="w-4 h-4" />
+                        </Link>
+                        <Link
+                            href={route('board.edit', { board })}
+                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                        >
+                            <PencilIcon className="w-4 h-4" />
+                        </Link>
+                        <button
+                            onClick={() => onDeleteClick(board.id)}
+                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input dark:border-none dark:bg-destructive text-destructive-foreground dark:hover:bg-destructive/85 h-9 px-3 cursor-pointer"
+                        >
+                            <TrashIcon className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+// Extracted DeleteDialog component
+const DeleteDialog = ({ 
+    isOpen, 
+    onOpenChange, 
+    onDelete 
+}: { 
+    isOpen: boolean, 
+    onOpenChange: (open: boolean) => void, 
+    onDelete: () => void 
+}) => {
+    return (
+        <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete the board.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                    <AlertDialogAction className="cursor-pointer" onClick={onDelete}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+};
+
 export default function Index({ boards, success, user }: { boards: Board[], success: string, user: User }) {
     
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -15,7 +95,7 @@ export default function Index({ boards, success, user }: { boards: Board[], succ
         setIsDeleteDialogOpen(true);
     };
 
-    const deleteTask = () => {
+    const deleteBoard = () => {
         if (boardToDelete) {
             router.delete(`/dashboard/board/${boardToDelete}`, {
                 preserveScroll: true,
@@ -58,64 +138,17 @@ export default function Index({ boards, success, user }: { boards: Board[], succ
                     </Link>
                 </div>
 
-                <div className="">
-                        <div className="rounded-lg border bg-card">
-                            <div className="hidden lg:flex items-center px-4 py-3 border-b font-medium">
-                                <div className="w-16">ID</div>
-                                <div className="flex-1">Title</div>
-                                <div className="w-48 text-right">Actions</div>
-                            </div>
-                            {boards.map((board) => (
-                                <div key={board.id} className="flex flex-col lg:flex-row items-center px-4 py-3 border-b last:border-b-0 lg:hover:bg-muted/50">
-                                    <div className="hidden lg:block lg:w-16 text-sm text-muted-foreground">#{board.id}</div>
-                                    <div className="hidden lg:block lg:w-full text-sm text-muted-foreground">{board.name}</div>
-                                    <div className="flex-1 text-center lg:text-left mb-3 lg:mb-0">
-                                        <div className="block lg:hidden mb-2">
-                                            <span className="text-sm text-muted-foreground">ID: {board.id}</span>
-                                        </div>
-                                        <div className="inline-block me-3 lg:hidden mb-2">
-                                            <span className="text-sm text-muted-foreground">Name: {board.name}</span>
-                                        </div>
-                                    </div>
-                                    <div className="w-full lg:w-48 flex justify-center lg:justify-end space-x-2">
-                                        <Link
-                                            href={route('board.show', { board })}
-                                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                                        >
-                                            <EyeIcon className="w-4 h-4" />
-                                        </Link>
-                                        <Link
-                                            href={route('board.edit', { board })}
-                                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                                        >
-                                            <PencilIcon className="w-4 h-4" />
-                                        </Link>
-                                        <button
-                                            onClick={() => openDeleteDialog(board.id)}
-                                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input dark:border-none dark:bg-destructive text-destructive-foreground dark:hover:bg-destructive/85 h-9 px-3 cursor-pointer"
-                                        >
-                                            <TrashIcon className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                </div>
+                <BoardList 
+                    boards={boards} 
+                    onDeleteClick={openDeleteDialog}
+                    user={user}
+                />
 
-                <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete the task.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
-                            <AlertDialogAction className="cursor-pointer" onClick={deleteTask}>Delete</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+                <DeleteDialog 
+                    isOpen={isDeleteDialogOpen}
+                    onOpenChange={setIsDeleteDialogOpen}
+                    onDelete={deleteBoard}
+                />
             </div>
         </AppLayout>
     );
