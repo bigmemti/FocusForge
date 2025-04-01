@@ -1,8 +1,8 @@
-import { type SharedData } from '@/types';
+import { User, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 
 // Navigation Component
-const Navigation = ({ user }: { user: any | null }) => (
+const Navigation = ({ user }: { user: User | null }) => (
     <nav className="flex items-center justify-between gap-4">
         <Link href={route('home')} className="inline-block rounded-sm px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]">
             <h1 className="text-2xl font-bold">FocusForge</h1>

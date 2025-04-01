@@ -7,10 +7,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 // Extracted BoardList component
-const BoardList = ({ boards, onDeleteClick, user }: { 
+const BoardList = ({ boards, onDeleteClick, }: { 
     boards: Board[], 
-    onDeleteClick: (id: number) => void,
-    user: User 
+    onDeleteClick: (id: number) => void
 }) => {
     return (
         <div className="rounded-lg border bg-card">
@@ -141,7 +140,6 @@ export default function Index({ boards, success, user }: { boards: Board[], succ
                 <BoardList 
                     boards={boards} 
                     onDeleteClick={openDeleteDialog}
-                    user={user}
                 />
 
                 <DeleteDialog 

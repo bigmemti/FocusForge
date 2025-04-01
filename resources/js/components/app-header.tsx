@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
-import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
+import { User, User, type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, LayoutGrid, Menu, Search } from 'lucide-react';
 import AppLogo from './app-logo';
@@ -117,7 +117,7 @@ const DesktopNav = ({ navItems, currentUrl }: DesktopNavProps) => (
 
 // User Profile Menu Component
 interface UserProfileProps {
-    user: any;
+    user: User;
 }
 
 const UserProfile = ({ user }: UserProfileProps) => {
