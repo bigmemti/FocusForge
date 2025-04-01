@@ -18,8 +18,8 @@ class TaskController extends Controller
         Gate::authorize('viewAny', [Task::class, $board->user]);
 
         return Inertia::render('task/index', [
-            'tasks' => $board->tasks()->latest()->get(),
-            'success' => session('success'),
+            'tasks' => $board->tasks()->orderBy('status')->orderBy('priority')->get(),
+            'success' => session()->get('success'),
             'board' => $board,
         ]);
     }
@@ -77,6 +77,6 @@ class TaskController extends Controller
 
         $task->delete();
 
-        return redirect()->route('board.task.index', $task->board);
+        return redirect()->route('board.task.index', $task->board)->with('success', 'Task deleted successfully');
     }
 }

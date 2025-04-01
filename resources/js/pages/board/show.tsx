@@ -2,6 +2,7 @@ import { Board, BreadcrumbItem, Task } from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import { Head, Link } from "@inertiajs/react";
 import { Pencil } from "lucide-react";
+import { TaskStatus } from "@/enums";
 
 export default function Show({ board, tasks }: { board: Board, tasks: Task[] }) {
 
@@ -63,17 +64,23 @@ export default function Show({ board, tasks }: { board: Board, tasks: Task[] }) 
                                             <div className="block lg:hidden mb-2">
                                                 <span className="text-sm text-muted-foreground">ID: {task.id}</span>
                                             </div>
-                                            <div className={`font-medium ${task.status ? 'line-through text-muted-foreground' : ''}`}>
+                                            <div className={`font-medium`}>
                                                 {task.title}
                                             </div>
                                         </div>
-                                        <div className="w-full lg:w-24 flex justify-center lg:justify-end">
-                                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                task.status 
-                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
-                                                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                                            }`}>
-                                                {task.status ? 'Completed' : 'Pending'}
+                                        <div className="w-full lg:w-52 flex justify-center lg:justify-end">
+                                            <span className={`px-2.5 py-1.5 rounded-full text-xs font-medium ${
+                                                                task.status === TaskStatus.TODO ? "bg-slate-900 text-slate-300" :
+                                                                task.status === TaskStatus.IN_PROGRESS ? "bg-blue-900 text-blue-300" :
+                                                                task.status === TaskStatus.TESTING ? "bg-purple-900 text-purple-300" :
+                                                                task.status === TaskStatus.DONE ? "bg-green-900 text-green-300" :
+                                                                task.status === TaskStatus.BACKLOG ? "bg-gray-900 text-gray-300" :
+                                                                task.status === TaskStatus.BLOCKED ? "bg-red-900 text-red-300" :
+                                                                task.status === TaskStatus.READY_FOR_DEPLOYMENT ? "bg-yellow-900 text-yellow-300" :
+                                                                task.status === TaskStatus.REJECTED ? "bg-pink-900 text-pink-300" :
+                                                                ""
+                                                            }`}>
+                                                {TaskStatus[task.status].replace(/_/g, ' ').toLowerCase()}
                                             </span>
                                         </div>
                                     </div>

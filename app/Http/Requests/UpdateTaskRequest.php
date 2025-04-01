@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use App\Enums\TaskStatus;
+use App\Enums\TaskPriority;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -24,7 +26,8 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'title' => 'string|max:255|min:3|nullable',
-            'status' => 'boolean|nullable',
+            'status' => 'integer|nullable|in:' . implode(',', array_column(TaskStatus::cases(), 'value')),
+            'priority' => 'integer|nullable|in:' . implode(',', array_column(TaskPriority::cases(), 'value')),
         ];
     }
 }

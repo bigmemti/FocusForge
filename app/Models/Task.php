@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\TaskStatus;
+use App\Enums\TaskPriority;
 
 class Task extends Model
 {
@@ -13,12 +15,15 @@ class Task extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title', 
-        'status'
+        'board_id',
+        'title',
+        'status',
+        'priority',
     ];
 
     protected $casts = [
-        'status' => 'boolean',
+        'status' => TaskStatus::class,
+        'priority' => TaskPriority::class,
     ];
 
     protected $hidden = [

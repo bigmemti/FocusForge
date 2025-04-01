@@ -19,9 +19,6 @@ export default function Index({ boards, success, user }: { boards: Board[], succ
         if (boardToDelete) {
             router.delete(`/dashboard/board/${boardToDelete}`, {
                 preserveScroll: true,
-                onSuccess: () => {
-                    toast.success('Board deleted successfully');
-                }
             });
             setIsDeleteDialogOpen(false);
             setBoardToDelete(null);
@@ -32,7 +29,10 @@ export default function Index({ boards, success, user }: { boards: Board[], succ
         if (success) {
             toast.success(success);
         }
-    }, [success]);
+        return router.on('success', (event) => {
+          toast.success(event.detail.page.props.success as string);
+        })
+      }, [])
     
     const breadcrumbs: BreadcrumbItem[] = [
         {

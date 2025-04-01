@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"  
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem, Board } from "@/types";
+import { TaskPriority } from "@/enums";
 import { Head, useForm } from "@inertiajs/react";
 
 export default function Create({ board }: { board: Board }) {
     const { post, data, setData, errors, processing } = useForm({
         title: '',
+        priority: TaskPriority.MEDIUM.toString(),
     });
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,6 +62,28 @@ export default function Create({ board }: { board: Board }) {
                             />
                             {errors.title && (
                                 <p className="text-sm text-red-500">{errors.title}</p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <label htmlFor="priority" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Priority
+                            </label>
+                            <Select 
+                                value={data.priority}
+                                onValueChange={(value) => setData('priority', value)}>  
+                                <SelectTrigger className={errors.priority ? 'border-red-500' : ''}>
+                                    <SelectValue placeholder="Select Priority" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                   {Object.entries(TaskPriority).filter(([key]) => isNaN(Number(key))).map(([key, value]) => (
+                                    <SelectItem key={key} value={value.toString()}>
+                                        {TaskPriority[Number(value)].replace(/_/g, ' ').toLowerCase()}
+                                    </SelectItem>
+                                   ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.priority && (
+                                <p className="text-sm text-red-500">{errors.priority}</p>
                             )}
                         </div>
                         <Button 

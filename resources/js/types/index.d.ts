@@ -1,5 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
+import { TaskStatus, TaskPriority } from '@/enums';
 
 export interface Auth {
     user: User;
@@ -44,7 +45,8 @@ export interface User {
 export interface Task {
     id: number;
     title: string;
-    status: boolean;
+    status: TaskStatus;
+    priority: TaskPriority;
     board_id: number;
     created_at: string;
     updated_at: string;

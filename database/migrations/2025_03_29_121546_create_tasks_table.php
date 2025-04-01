@@ -16,7 +16,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Board::class)->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->boolean('status')->default(false);
+            $table->unsignedTinyInteger('status')->default(0);
+            $table->unsignedTinyInteger('priority')->default(2);
             $table->timestamps();
             $table->softDeletes();
         });

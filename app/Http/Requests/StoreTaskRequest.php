@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Task;
+use App\Enums\TaskPriority;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,6 +26,7 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255|min:3',
+            'priority' => 'nullable|integer|in:' . implode(',', array_column(TaskPriority::cases(), 'value')),
         ];
     }
 }
